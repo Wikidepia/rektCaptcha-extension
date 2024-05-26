@@ -1,0 +1,69 @@
+{
+  "manifest_version": 3,
+  "name": "rektCaptcha: reCaptcha Solver",
+  "version": "0.1.0",
+  "description": "Automatically solve reCaptcha using AI.",
+  "icons": {
+    "16": "icons/icon_16.png",
+    "32": "icons/icon_32.png",
+    "48": "icons/icon_48.png",
+    "128": "icons/icon_128.png"
+  },
+  "action": {
+    "default_title": "rektCaptcha",
+    "default_popup": "popup.html"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "hekt@akmal.dev"
+    }
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "permissions": ["storage", "declarativeNetRequest"],
+  "web_accessible_resources": [
+    {
+      "resources": ["dist/*"],
+      "matches": ["<all_urls>"]
+    },
+    {
+      "resources": ["models/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "host_permissions": [
+    "*://*.google.com/recaptcha/*",
+    "*://*.recaptcha.net/recaptcha/*"
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.google.com/recaptcha/api2/*",
+        "*://*.google.com/recaptcha/enterprise/*",
+        "*://*.recaptcha.net/recaptcha/api2/*",
+        "*://*.recaptcha.net/recaptcha/enterprise/*"
+      ],
+      "js": ["recaptcha.js"],
+      "run_at": "document_end",
+      "all_frames": true,
+      "match_about_blank": false
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["recaptcha-visibility.js"],
+      "run_at": "document_end",
+      "all_frames": true,
+      "match_about_blank": false
+    }
+  ]
+}
